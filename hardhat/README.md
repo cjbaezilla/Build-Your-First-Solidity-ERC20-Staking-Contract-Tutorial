@@ -8,9 +8,9 @@ The staking system is built on top of OpenZeppelin's implementation of ERC-4626.
 
 ### Key Features
 - **ERC-4626 Compliant**: Follows the Ethereum standard for tokenized vaults.
-- **Yield Distribution**: Includes a mechanism for the owner to distribute yield to stakers.
-- **Auto-Compounding Logic**: Shares naturally increase in value as yield is added to the vault.
-- **OpenZeppelin Security**: Leveragesbattle-tested libraries for `Ownable` and `SafeERC20`.
+- **Yield via Transfers**: Shares naturally increase in value as external protocols or users transfer tokens directly to the vault.
+- **Auto-Compounding Logic**: The exchange rate between assets and shares updates automatically based on the vault's balance.
+- **OpenZeppelin Security**: Leverages battle-tested libraries for `SafeERC20` and `ERC4626`.
 
 ## 🏗️ Architecture
 
@@ -43,14 +43,21 @@ npx hardhat compile
 
 The project includes a comprehensive test suite that verifies:
 1. **Staking/Unstaking**: Ensuring users can deposit assets and receive the correct amount of shares.
-2. **Yield Distribution**: Verifying that the value of shares increases correctly after yield is distributed by the owner.
+2. **Yield Tracking**: Verifying that the value of shares increases correctly after yield is added to the contract via direct transfers.
 
 Run tests with:
 ```bash
 npx hardhat test
 ```
 
-## 📂 Project Structure
+## Deployments (Sepolia)
+
+| Contract | Address | Transaction Hash |
+|----------|---------|------------------|
+| **ERC20Mock** | [`0x22c26E2278Fb64bF367dE2121762e174ce02c4ED`](https://sepolia.etherscan.io/address/0x22c26E2278Fb64bF367dE2121762e174ce02c4ED) | [`0xbe3dd6773d7b8b18b553293eaa7f90a72cc129fe3c9919587e3cb1da31f3d2e3`](https://sepolia.etherscan.io/tx/0xbe3dd6773d7b8b18b553293eaa7f90a72cc129fe3c9919587e3cb1da31f3d2e3) |
+
+## Project Structure
+
 
 - `contracts/SimpleStaking.sol`: The main ERC-4626 staking vault.
 - `contracts/ERC20Mock.sol`: A mock token used for testing purposes.

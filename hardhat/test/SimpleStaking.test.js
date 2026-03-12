@@ -34,10 +34,9 @@ describe("SimpleStaking (ERC-4626)", function () {
   it("Should increase share value after yield distribution", async function () {
     await staking.connect(user).deposit(stakeAmount, user.address);
     
-    // Distribute 10% yield
+    // Distribute 10% yield via direct transfer
     const yieldAmount = ethers.parseEther("10");
-    await asset.approve(await staking.getAddress(), yieldAmount);
-    await staking.distributeYield(yieldAmount);
+    await asset.transfer(await staking.getAddress(), yieldAmount);
 
     // After yield, the same number of shares is worth more assets
     // assetPerShare = (stakeAmount + yieldAmount) / stakeAmount = 1.1
