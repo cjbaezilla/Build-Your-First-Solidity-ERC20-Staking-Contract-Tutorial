@@ -57,6 +57,27 @@ npx hardhat test
 | Contract | Address | Transaction Hash |
 |----------|---------|------------------|
 | **ERC20Mock** | [`0x22c26E2278Fb64bF367dE2121762e174ce02c4ED`](https://sepolia.etherscan.io/address/0x22c26E2278Fb64bF367dE2121762e174ce02c4ED) | [`0xbe3dd6773d7b8b18b553293eaa7f90a72cc129fe3c9919587e3cb1da31f3d2e3`](https://sepolia.etherscan.io/tx/0xbe3dd6773d7b8b18b553293eaa7f90a72cc129fe3c9919587e3cb1da31f3d2e3) |
+| **SimpleStaking** | [`0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458`](https://sepolia.etherscan.io/address/0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458) | [`0xb89c9a91d4e4a073205b6da9fdc6e1f12a7103372b590210881e30fca8518aef`](https://sepolia.etherscan.io/tx/0xb89c9a91d4e4a073205b6da9fdc6e1f12a7103372b590210881e30fca8518aef) |
+
+### Asset Token Details (Underlying)
+
+This is the base currency of the vault. Users deposit (stake) this token into the contract to begin earning yield.
+
+| Property | Value |
+|----------|-------|
+| **Name** | Demo Token Staking |
+| **Symbol** | DEMO |
+| **Decimals** | 18 |
+
+### Yield Token Details (Shares)
+
+This token is issued to users when they stake their assets. It represents their ownership of a part of the vault's total assets. As the vault earns yield, each share becomes worth more of the underlying asset.
+
+| Property | Value |
+|----------|-------|
+| **Name** | Staking Yield Token |
+| **Symbol** | YIELD |
+| **Decimals** | 18 |
 
 ## Security Analysis & Enhancements
 
