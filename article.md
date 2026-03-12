@@ -26,6 +26,15 @@ Why not just track balances of the original token? Because share tokens can appr
 
 This separation creates a powerful abstraction layer. The vault can receive yield from any source—whether through staking rewards from the underlying blockchain, fees collected from users, or direct donations—and all shareholders benefit proportionally without anyone having to calculate individual rewards.
 
+## What Happens Behind the Curtains
+
+When I deposit tokens into the contract, three things happen:
+1. My tokens are moved into the vault.
+2. The contract calculates how many "shares" I should get based on the current math.
+3. The contract creates (mints) those shares and sends them to my wallet.
+
+When I’m ready to take my money out, I send my shares back to the contract. The contract then destroys those shares and sends me the proportional amount of the underlying assets, including any rewards that were added while I was staking.
+
 ## How ERC-4626 Changes Everything
 
 The ERC-4626 standard is the reason staking contracts became mainstream. Before this standard, every staking contract had its own way of doing things, making them incompatible with each other. It was like every bank having different rules for withdrawals and deposits—chaotic and confusing.
@@ -68,6 +77,24 @@ But I implemented a defense called the "decimals offset" that makes this attack 
 
 What gives me confidence is that OpenZeppelin has already solved most common vulnerabilities. Their ERC-4626 implementation includes these protections by default, and I simply override the decimals offset function to enhance security further.
 
+## Handling Mistakes and Practical Safety
+
+While building this, I also looked into what happens if things don't go according to plan. There are two common situations that I think are important to understand:
+
+**What if I send the wrong token?**
+If someone accidentally sends a token that isn't the "Asset Token" directly to the vault's address, those tokens will basically be stuck. The contract only knows how to manage the specific token it was designed for. Since there isn't a "manual" way for me to go in and pull out random tokens, they effectively stay in the contract's address forever. It's a good reminder to always use the proper deposit buttons on an app rather than sending tokens directly to a contract address.
+
+**What if I try to send ETH?**
+If you try to send ETH (the native currency of Ethereum) directly to this staking contract, the transaction will simply fail. I didn't include the specific code needed to accept plain ETH, so the network will reject the transfer and your money will stay in your wallet. It’s a built-in safety feature of how Solidity (the language I used) works.
+
+## Keeping the System Secure
+
+Security was my top priority. I used tools from a group called OpenZeppelin, who are well-known for writing safe, battle-tested code. 
+
+One specific risk I addressed is something called an "Inflation Attack." This can happen when a vault is empty and someone tries to manipulate the math to steal tokens from the next person who joins. To prevent this, I used a technique called a "decimals offset." It basically adds a bit of extra precision to the math, making it way too expensive for anyone to try and trick the system. 
+
+It’s like adding extra decimal places to a bank balance so that even a fraction of a cent is accounted for, leaving no room for someone to "round off" money into their own pocket.
+
 ## Why OpenZeppelin Matters in This Journey
 
 I've mentioned OpenZeppelin several times, and for good reason. When I first started, I thought I needed to write everything myself to truly understand it. But I learned that using battle-tested libraries is smarter and safer.
@@ -109,6 +136,14 @@ Building this staking contract taught me that elegance in smart contracts comes 
 I also learned that security is not an afterthought—it's baked into every design decision. The decimals offset might seem like a minor tweak, but it prevents catastrophic losses. Each security requirement feels like adding another layer of protection that compounds the safety of the entire system.
 
 Most importantly, I discovered that explaining these concepts clearly is as important as building them correctly. When technology remains wrapped in jargon, it excludes people. My goal with this project and this article is to open the door for anyone curious about how decentralized finance works under the hood.
+
+## Where This is Heading
+
+I’m happy with how this project turned out. It’s not just about the code; it’s about making financial tools that are more accessible and transparent. When you use a smart contract, you don't have to trust a person or a company—you just have to trust the math, which is public for anyone to see.
+
+The code for my contract is quite short—only about 37 lines—because I leaned on the work of experts. This allowed me to focus on making it secure rather than trying to reinvent everything myself.
+
+If you’re interested in how this works, I encourage you to look at the contract address on the Sepolia testnet. You can see the transactions happening in real-time. It’s a great way to start understanding how the future of money is being built, one step at a time. I'm glad to be part of this community and I look forward to seeing how these tools continue to evolve.
 
 ## Conclusion and Next Steps
 
