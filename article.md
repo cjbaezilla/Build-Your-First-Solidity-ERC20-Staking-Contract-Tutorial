@@ -6,6 +6,8 @@ I want to share something exciting that I've been working on: a staking contract
 
 When I first encountered staking contracts, I was amazed at how they transform simple token holding into active participation in blockchain networks. The beauty lies in the dual-token system: you deposit one token and receive another that represents your share of the entire pool. As rewards flow into the vault, each share becomes more valuable automatically. It's elegant, transparent, and completely automated.
 
+The complete source code for this project is available at https://github.com/cjbaezilla/Build-Your-First-Solidity-ERC20-Staking-Contract-Tutorial.
+
 ## What Are Staking Contracts and Why Do We Need Them?
 
 Staking contracts are like digital vaults that hold cryptocurrency tokens on behalf of users. But they're much more than just storage—they're active participants in blockchain networks that help secure transactions while rewarding users for their contribution.
@@ -216,6 +218,16 @@ Suppose the vault currently holds 1000 DEMO tokens with 100 shares. The exchange
 
 This is the magic of the share token model: yield accrues to the vault's balance and automatically increases every share's value. There's no need to manually distribute rewards or track individual contributions over time. The exchange rate does the work for us.
 
+### How Your Shares Grow When Others Deposit
+
+When you stake your tokens, you receive share tokens that represent your ownership of the vault's total assets. The value per share is calculated as total assets divided by total shares. As new tokens enter the vault from any source, your shares automatically become more valuable because they now represent a claim on a larger pool.
+
+Consider this example: you hold 10 shares when the vault contains 1,000 tokens, making each share worth 100 tokens. If someone deposits an additional 100 tokens, the vault balance increases to 1,100 while your share count remains 10. Now each share equals 110 tokens, giving you an extra 100 tokens in value without any action required.
+
+I designed the system so that growth happens completely passively. The exchange rate updates instantly whenever tokens arrive—whether from other users depositing, staking rewards, or direct transfers. You simply hold your shares and watch them appreciate. No claiming, no extra transactions, no manual steps. The mathematics ensures everyone who owned shares before the deposit benefits proportionally, while new depositors receive shares at the updated rate.
+
+This is the power of the ERC-4626 standard: it transforms staking into a truly effortless experience. You commit once, then let the system work for you. Every token that flows into the vault increases the value of what you already own, and that's how we create sustainable passive income in DeFi.
+
 ### A Minimalist Design with Maximum Security
 
 The simplicity of this contract is its strength. At 37 lines total, it's tiny compared to what it achieves. That brevity comes from relying on OpenZeppelin's comprehensive implementation. My contribution was to identify the necessary security customization—the 3-decimal offset—and apply it cleanly.
@@ -338,16 +350,661 @@ Here's what OpenZeppelin gives me automatically:
 
 My SimpleStaking contract is only 37 lines of code because OpenZeppelin handles all the complexity. I focus on the specific customizations—like the decimals offset—that make my vault secure. This separation of concerns means I can quickly build secure contracts without reinventing the wheel.
 
-## Real-World Applications and Deployment
+## Bringing the Contract to Life: Building the User Interface
 
-I deployed my staking contract to Ethereum's Sepolia testnet, which is a practice environment where no real money is at risk. You can verify everything on the blockchain:
+Staking contracts represent a fundamental building block of the decentralized future. They demonstrate how code can create trustless, automated financial systems that serve everyone equally. The ERC-4626 standard, with its two-token architecture and precise mathematical guarantees, provides a solid foundation for this new economy.
 
-- ERC20Mock token (the underlying asset) is deployed at 0x22c26E2278Fb64bF367dE2121762e174ce02c4ED
-- SimpleStaking vault is deployed at 0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458
+If you're reading this and feeling inspired, I encourage you to explore further. Deploy this contract on a testnet. Interact with it using a wallet. Read the OpenZeppelin documentation. The skills you develop will serve you well as blockchain technology continues to reshape finance.
 
-The tests prove that the system works: users can stake tokens and receive shares, yield distributions increase share values correctly, and all calculations maintain precision.
+I'm optimistic about what we can build together. The tools are available, the standards are maturing, and the community is welcoming to newcomers. Whether you're a developer, a designer, or simply curious about this space, there's a place for you in building a more open and accessible financial system.
 
-This isn't just a toy project. The same patterns are used by major DeFi protocols like Yearn Finance, Aave, and Compound. Understanding this implementation gives you insight into how billions of dollars in assets are managed across decentralized finance.
+The future of finance isn't just for experts—it's for everyone. And I'm thrilled to be part of making that happen, one smart contract at a time.
+
+When I finished writing the smart contract, I realized something important: a brilliant contract is useless if people cannot interact with it easily. I needed to build a friendly interface that anyone could use, even if they knew nothing about blockchain technology. This part of the project taught me how to connect the theoretical world of smart contracts with practical, everyday usability.
+
+In this section, I'll walk you through how I built the frontend application that lets users stake their tokens with just a few clicks. I'll explain each piece in simple terms, focusing on how everything fits together rather than getting lost in technical details.
+
+### The Foundation: Setting Up the Project
+
+I chose Next.js for this project because it gives me a solid foundation for building modern web applications. Think of Next.js as a well-organized toolbox that handles all the boring but necessary stuff—like routing, performance optimization, and server-side rendering—so I can focus on what makes my app special.
+
+The first thing I did was create a basic page structure. Here's what my main page looks like in code:
+
+```typescript
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { StakingCard } from '../components/StakingCard';
+import styles from '../styles/Home.module.css';
+
+const Home: NextPage = () => {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>ERC4626 Staking Vault</title>
+        <meta
+          content="Premium Staking interface for ERC4626 Vaults"
+          name="description"
+        />
+        <link href="/favicon.ico" rel="icon" />
+      </Head>
+
+      <nav className={styles.navbar}>
+        <div className={styles.logo}>
+          <span className={styles.logoIcon}>💎</span>
+          <span>YieldVault</span>
+        </div>
+        <ConnectButton showBalance={false} chainStatus="icon" />
+      </nav>
+
+      <main className={styles.main}>
+        <div className={styles.heroSection}>
+          <h1 className={styles.heroTitle}>
+            Maximize Your Yield with <span className={styles.gradientText}>ERC-4626</span>
+          </h1>
+          <p className={styles.heroSubtitle}>
+            Secure, transparent, and standard-compliant staking. 
+            Deposit your DEMO tokens and earn YIELD shares automatically.
+          </p>
+        </div>
+
+        <div className={styles.stakingContainer}>
+          <StakingCard />
+        </div>
+      </main>
+
+      <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <p>Standardized Yield-Bearing Vault &copy; 2026</p>
+          <div className={styles.footerLinks}>
+            <a href="https://github.com" target="_blank" rel="noreferrer">Github</a>
+            <a href="https://etherscan.io" target="_blank" rel="noreferrer">Explorer</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
+```
+
+This might look like a lot at first, but it's actually quite straightforward. The page has three main parts: a navigation bar at the top with a logo and wallet connection button, a main content area with a title and the staking interface, and a footer at the bottom. The `StakingCard` component is where all the real action happens—that's the part I'll explain next.
+
+### The Staking Interface: A User-Friendly Card
+
+I designed the `StakingCard` component to be intuitive and clean. It shows users their balances, lets them input amounts, and handles the entire staking process. Here's the complete component:
+
+```typescript
+import { useState } from 'react';
+import { useStaking } from '../hooks/useStaking';
+import styles from '../styles/Staking.module.css';
+
+export function StakingCard() {
+  const {
+    assetBalance,
+    shareBalance,
+    allowance,
+    totalAssets,
+    previewAssets,
+    approve,
+    deposit,
+    withdraw,
+    isPending,
+    isWaitingForTransaction,
+    address
+  } = useStaking();
+
+  const [amount, setAmount] = useState('');
+  const [activeTab, setActiveTab] = useState<'stake' | 'unstake'>('stake');
+
+  const handleAction = async () => {
+    if (!amount || isNaN(Number(amount))) return;
+
+    if (activeTab === 'stake') {
+      if (Number(allowance) < Number(amount)) {
+        await approve(amount);
+      } else {
+        await deposit(amount);
+      }
+    } else {
+      await withdraw(amount);
+    }
+  };
+
+  if (!address) {
+    return (
+      <div className={styles.card}>
+        <h2 className={styles.title}>Welcome to Staking</h2>
+        <p className={styles.description}>Please connect your wallet to start earning yield.</p>
+      </div>
+    );
+  }
+
+  const isApproved = Number(allowance) >= Number(amount) && Number(amount) > 0;
+
+  return (
+    <div className={styles.card}>
+      <div className={styles.tabs}>
+        <button 
+          className={activeTab === 'stake' ? styles.activeTab : styles.tab} 
+          onClick={() => setActiveTab('stake')}
+        >
+          Stake
+        </button>
+        <button 
+          className={activeTab === 'unstake' ? styles.activeTab : styles.tab} 
+          onClick={() => setActiveTab('unstake')}
+        >
+          Unstake
+        </button>
+      </div>
+
+      <div className={styles.statsGrid}>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>Total Vault Assets</span>
+          <span className={styles.statValue}>{Number(totalAssets).toLocaleString()} DEMO</span>
+        </div>
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>Your Staked Balance</span>
+          <span className={styles.statValue}>{Number(previewAssets).toLocaleString()} DEMO</span>
+          <span className={styles.statSubValue}>({Number(shareBalance).toLocaleString()} YIELD)</span>
+        </div>
+      </div>
+
+      <div className={styles.inputContainer}>
+        <div className={styles.inputHeader}>
+          <span>Amount</span>
+          <span>Balance: {activeTab === 'stake' ? assetBalance : previewAssets}</span>
+        </div>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="0.0"
+          className={styles.input}
+        />
+        <div className={styles.maxButton} onClick={() => setAmount(activeTab === 'stake' ? assetBalance : previewAssets)}>
+          MAX
+        </div>
+      </div>
+
+      <button 
+        className={styles.actionButton} 
+        disabled={isPending || isWaitingForTransaction || !amount}
+        onClick={handleAction}
+      >
+        {isPending || isWaitingForTransaction ? (
+          <span className={styles.loader}></span>
+        ) : (
+          activeTab === 'stake' 
+            ? (isApproved ? 'Stake DEMO' : 'Approve DEMO') 
+            : 'Unstake DEMO'
+        )}
+      </button>
+
+      {(isPending || isWaitingForTransaction) && (
+        <p className={styles.statusText}>
+          {isPending ? 'Confirm in wallet...' : 'Transaction pending...'}
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+Let me break this down in plain language. The component starts by importing a custom hook called `useStaking`—this is my bridge to the blockchain. The hook gives me all the data I need (balances, transaction status) and all the functions I need to interact with the contract (approve, deposit, withdraw).
+
+Inside the component, I use React's `useState` to keep track of two things: what amount the user typed into the input field, and whether they want to stake or unstake (controlled by the two tabs at the top). The `handleAction` function is the main logic—when the user clicks the big button, this function decides whether to run an approval transaction first (if the user hasn't approved the vault yet) or directly call the deposit function.
+
+There's an important conditional at the beginning: if the user hasn't connected their wallet yet (`!address`), I show a simple welcome message asking them to connect. This is handled by the RainbowKit `ConnectButton` that lives in the navigation bar.
+
+When the user is connected, I show the full interface. The stats grid displays two key pieces of information: the total amount of tokens in the vault (this shows how big the staking pool is) and their personal balance (how much they have staked, shown both in DEMO tokens and in YIELD shares).
+
+The input section lets them type how much they want to stake or unstake, and shows their available balance. The MAX button is a convenient shortcut that fills in their entire available balance with one click. The big action button changes its label based on context: if they haven't approved the vault to spend their tokens yet, it says "Approve DEMO"; once approved, it says "Stake DEMO". For unstaking, it always says "Unstake DEMO". While a transaction is in progress, the button shows a loading spinner and becomes disabled.
+
+The status text below the button gives users feedback about what's happening—either asking them to confirm in their wallet or telling them the transaction is pending on the network.
+
+### The Bridge to Blockchain: The useStaking Hook
+
+The real magic happens in the `useStaking` hook. This is where I connect my React application to the actual deployed smart contracts on the Ethereum Sepolia testnet. Let me show you the full hook code:
+
+```typescript
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { formatUnits, parseUnits } from 'viem';
+import { 
+  ERC20_MOCK_ADDRESS, 
+  ERC20_MOCK_ABI, 
+  SIMPLE_STAKING_ADDRESS, 
+  SIMPLE_STAKING_ABI 
+} from '../constants/contracts';
+import { useState, useEffect } from 'react';
+
+export function useStaking() {
+  const { address } = useAccount();
+  const { writeContract, data: hash, error: writeError, isPending } = useWriteContract();
+  
+  const { isLoading: isWaitingForTransaction, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
+
+  // Fetch decimals
+  const { data: assetDecimals } = useReadContract({
+    address: ERC20_MOCK_ADDRESS,
+    abi: ERC20_MOCK_ABI,
+    functionName: 'decimals',
+  });
+
+  const { data: shareDecimals } = useReadContract({
+    address: SIMPLE_STAKING_ADDRESS,
+    abi: SIMPLE_STAKING_ABI,
+    functionName: 'decimals',
+  });
+
+  const aDec = assetDecimals ?? 18;
+  const sDec = shareDecimals ?? 18;
+
+  // Fetch balances
+  const { data: assetBalance, refetch: refetchAssetBalance } = useReadContract({
+    address: ERC20_MOCK_ADDRESS,
+    abi: ERC20_MOCK_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    }
+  });
+
+  const { data: shareBalance, refetch: refetchShareBalance } = useReadContract({
+    address: SIMPLE_STAKING_ADDRESS,
+    abi: SIMPLE_STAKING_ABI,
+    functionName: 'balanceOf',
+    args: address ? [address] : undefined,
+    query: {
+      enabled: !!address,
+    }
+  });
+
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: ERC20_MOCK_ADDRESS,
+    abi: ERC20_MOCK_ABI,
+    functionName: 'allowance',
+    args: address ? [address, SIMPLE_STAKING_ADDRESS] : undefined,
+    query: {
+      enabled: !!address,
+    }
+  });
+
+  const { data: totalAssets, refetch: refetchTotalAssets } = useReadContract({
+    address: SIMPLE_STAKING_ADDRESS,
+    abi: SIMPLE_STAKING_ABI,
+    functionName: 'totalAssets',
+  });
+
+  // Preview redeem (how many assets for current shares)
+  const { data: previewAssets } = useReadContract({
+    address: SIMPLE_STAKING_ADDRESS,
+    abi: SIMPLE_STAKING_ABI,
+    functionName: 'convertToAssets',
+    args: shareBalance ? [shareBalance] : undefined,
+    query: {
+      enabled: !!shareBalance,
+    }
+  });
+
+  const refetchAll = () => {
+    refetchAssetBalance();
+    refetchShareBalance();
+    refetchAllowance();
+    refetchTotalAssets();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetchAll();
+    }
+  }, [isSuccess]);
+
+  const approve = async (amount: string) => {
+    const value = parseUnits(amount, aDec);
+    writeContract({
+      address: ERC20_MOCK_ADDRESS,
+      abi: ERC20_MOCK_ABI,
+      functionName: 'approve',
+      args: [SIMPLE_STAKING_ADDRESS, value],
+    });
+  };
+
+  const deposit = async (amount: string) => {
+    if (!address) return;
+    const value = parseUnits(amount, aDec);
+    writeContract({
+      address: SIMPLE_STAKING_ADDRESS,
+      abi: SIMPLE_STAKING_ABI,
+      functionName: 'deposit',
+      args: [value, address],
+    });
+  };
+
+  const redeem = async (amount: string) => {
+    if (!address) return;
+    const value = parseUnits(amount, sDec);
+    writeContract({
+      address: SIMPLE_STAKING_ADDRESS,
+      abi: SIMPLE_STAKING_ABI,
+      functionName: 'redeem',
+      args: [value, address, address],
+    });
+  };
+
+  const withdraw = async (amount: string) => {
+    if (!address) return;
+    const value = parseUnits(amount, aDec);
+    writeContract({
+      address: SIMPLE_STAKING_ADDRESS,
+      abi: SIMPLE_STAKING_ABI,
+      functionName: 'withdraw',
+      args: [value, address, address],
+    });
+  };
+
+  return {
+    address,
+    assetBalance: assetBalance ? formatUnits(assetBalance, aDec) : '0',
+    shareBalance: shareBalance ? formatUnits(shareBalance, sDec) : '0',
+    allowance: allowance ? formatUnits(allowance, aDec) : '0',
+    totalAssets: totalAssets ? formatUnits(totalAssets, aDec) : '0',
+    previewAssets: previewAssets ? formatUnits(previewAssets, aDec) : '0',
+    approve,
+    deposit,
+    redeem,
+    withdraw,
+    isPending,
+    isWaitingForTransaction,
+    writeError,
+    refetchAll
+  };
+}
+```
+
+This hook is the heart of my application's blockchain connectivity. It uses the `wagmi` library, which provides React hooks specifically designed for Ethereum interactions. Let me walk you through what each part does.
+
+First, I import everything I need. The `useAccount` hook tells me whether the user has connected their wallet and what their address is. The `useWriteContract` hook is how I send transactions to the blockchain. The `useWaitForTransactionReceipt` hook lets me know when a transaction is confirmed. And the `useReadContract` hook is how I fetch data from the contracts—like balances and vault information.
+
+At the beginning of the function, I get the user's wallet address using `useAccount`. Then I set up the writing functionality with `useWriteContract`. This gives me a `writeContract` function that I can call whenever I want to execute a transaction, plus metadata about whether a transaction is pending or has failed.
+
+Next, I set up `useWaitForTransactionReceipt` to monitor the transaction hash that `writeContract` returns. This tells me when the transaction is actually mined on the blockchain and no longer just pending.
+
+After that, I fetch some basic information from both contracts: the number of decimals each token uses. Tokens can have different decimal precision—most use 18 decimals (like ETH), but some use fewer. I need to know this so I can convert between the raw blockchain numbers and human-readable amounts. I use `?? 18` as a fallback in case the data hasn't loaded yet.
+
+Then comes the bulk of the hook: reading all the data I need from the contracts. I use `useReadContract` multiple times to fetch:
+
+1. The user's balance of the underlying DEMO token (`assetBalance`)
+2. The user's balance of YIELD share tokens (`shareBalance`)
+3. How many DEMO tokens the user has approved the vault to spend (`allowance`)
+4. The total amount of assets held by the vault (`totalAssets`)
+5. How much DEMO their current shares are worth (`previewAssets`), calculated by calling `convertToAssets` on their share balance
+
+Each `useReadContract` call takes the contract address, the ABI (which I'll explain shortly), the function name to call, and the arguments for that function. I also use the `query.enabled` option to make sure these calls only run when the user has connected their wallet.
+
+The `refetchAll` function is useful for refreshing all this data after a transaction completes. I set up a `useEffect` that calls `refetchAll` whenever `isSuccess` becomes true (meaning a transaction just finished). This ensures the displayed numbers are always up to date.
+
+Now let's look at the action functions: `approve`, `deposit`, `redeem`, and `withdraw`. Each of these calls `writeContract` with the appropriate contract address, ABI, function name, and arguments.
+
+The `approve` function tells the DEMO token contract that the staking vault is allowed to spend a specific amount of the user's tokens. This is a necessary step because of how Ethereum security works: tokens are safe in your wallet until you explicitly authorize another contract to move them.
+
+The `deposit` function calls the vault's `deposit` method, passing the amount of tokens (converted to the correct decimal format) and the user's address as the receiver of the shares. The vault automatically transfers the tokens from the user's wallet (since they already approved it) and mints new shares to the user.
+
+The `redeem` function is for withdrawing by specifying how many shares to burn. The user burns their shares and receives the proportional amount of underlying assets.
+
+The `withdraw` function is for withdrawing by specifying how many underlying assets they want to receive. The vault calculates how many shares to burn and sends the requested assets to the user.
+
+Finally, the hook returns all this data and functionality in a clean object that the `StakingCard` component can use. The component doesn't need to know about wagmi or contract ABIs—it just calls simple functions and receives readable numbers.
+
+### Understanding ABIs: The Contract's User Manual
+
+You might have noticed references to `ERC20_MOCK_ABI` and `SIMPLE_STAKING_ABI` in the hook. These are the Application Binary Interfaces—essentially, they're the list of functions that a contract exposes, written in a format that JavaScript can understand.
+
+When we want to call a smart contract function from JavaScript, we need to tell our library two things: where the contract lives (its address on the blockchain) and what functions it has (the ABI). The ABI is like a user manual that specifies each function's name, its parameters, and what it returns.
+
+I store these ABIs in a separate file called `contracts.ts` so they can be imported by any component that needs them:
+
+```typescript
+export const ERC20_MOCK_ADDRESS = '0x22c26E2278Fb64bF367dE2121762e174ce02c4ED' as const;
+export const SIMPLE_STAKING_ADDRESS = '0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458' as const;
+
+export const ERC20_MOCK_ABI = [
+  {
+    "inputs": [
+      { "internalType": "string", "name": "name", "type": "string" },
+      { "internalType": "string", "name": "symbol", "type": "string" },
+      { "internalType": "address", "name": "initialAccount", "type": "address" },
+      { "internalType": "uint256", "name": "initialBalance", "type": "uint256" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  // ... many more function definitions ...
+] as const;
+
+export const SIMPLE_STAKING_ABI = [
+  {
+    "inputs": [
+      { "internalType": "contract IERC20", "name": "asset_", "type": "address" },
+      { "internalType": "string", "name": "name_", "type": "string" },
+      { "internalType": "string", "name": "symbol_", "type": "string" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  // ... all the ERC4626 functions ...
+] as const;
+```
+
+These ABIs are quite long because they include every function and event that the contracts expose. But the important thing to understand is that they're automatically generated from the Solidity source code. I could write them by hand, but that would be error-prone. Instead, I use tools that read the contract code and produce these JSON definitions.
+
+With the ABIs in place, my application can call any function on either contract as if it were a normal JavaScript function. The `wagmi` library handles all the complexity of encoding the function call into the format the Ethereum Virtual Machine expects, sending the transaction, and decoding the response.
+
+### Wallet Connection with RainbowKit
+
+One of the easiest decisions I made was to use RainbowKit for wallet connection. RainbowKit is a library that provides a beautiful, consistent interface for connecting crypto wallets like MetaMask, Coinbase Wallet, and WalletConnect.
+
+The configuration lives in `wagmi.ts`:
+
+```typescript
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import {
+  sepolia,
+} from 'wagmi/chains';
+
+export const config = getDefaultConfig({
+  appName: 'RainbowKit App',
+  projectId: 'YOUR_PROJECT_ID',
+  chains: [
+    sepolia,
+  ],
+  ssr: true,
+});
+```
+
+This sets up the wallet connection to work with the Sepolia testnet—the same network where I deployed my contracts. The `projectId` is something I'd get from WalletConnect if I wanted to support mobile wallets through that protocol. The `ssr: true` option ensures wallet connection works with server-side rendering, which is important for Next.js applications.
+
+In my main page, I simply add the `<ConnectButton />` component from RainbowKit and it handles everything: showing the connect button when not connected, displaying the wallet address and balance when connected, and letting users switch networks or disconnect. I customized it slightly with `showBalance={false}` and `chainStatus="icon"` to keep the interface clean.
+
+What I appreciate about RainbowKit is that it abstracts away all the complexity of different wallet providers. Whether a user uses MetaMask, Brave Wallet, or a mobile wallet through WalletConnect, they all get the same seamless experience. And from my perspective as a developer, I don't have to write separate code for each wallet type.
+
+### The Complete Picture: How It All Flows Together
+
+Now that I've explained the individual pieces, let me trace through what happens when a user actually stakes tokens:
+
+First, the user opens the web page. The Next.js app loads and displays the staking interface. The `useStaking` hook runs its `useReadContract` calls, but since no wallet is connected yet, most of them return nothing. The `StakingCard` component sees that `address` is null and shows the welcome message.
+
+The user clicks the "Connect Wallet" button (provided by RainbowKit). Their wallet extension pops up and asks them to approve the connection. Once they approve, `wagmi` gives my app their address and all the `useReadContract` queries start running for real.
+
+Now the app fetches: their DEMO token balance, their YIELD share balance, their allowance for the vault, the total assets in the vault, and the value of their shares. All these numbers appear in the interface almost instantly.
+
+The user types an amount into the input field—say, 100 DEMO tokens. The `onChange` handler updates the local state, which causes React to re-render the component. The button now reads "Approve DEMO" because the allowance (likely zero) is less than the amount.
+
+The user clicks "Approve DEMO". The `handleAction` function calls `approve(100)`. This triggers `writeContract` to create a transaction that calls `approve` on the DEMO token contract, authorizing the vault to spend 100 tokens from this user's account.
+
+Ethereum asks the user to confirm this transaction in their wallet. They click confirm. The transaction is sent to the network. The `isPending` flag becomes true, so the button shows a loading spinner.
+
+After the transaction is mined (usually 10-15 seconds on Sepolia), `isSuccess` becomes true. The `useEffect` I set up calls `refetchAll`, which updates all the numbers. Most importantly, the `allowance` value is now at least 100. The button label changes to "Stake DEMO".
+
+The user clicks "Stake DEMO". The `handleAction` function calls `deposit(100)`. This creates another transaction that calls `deposit` on the staking vault, passing 100 and the user's address. The vault receives the 100 DEMO tokens (which the user's wallet transfers automatically because of the previous approval) and mints shares to the user.
+
+Again, the user confirms in their wallet. The transaction processes. When it succeeds, `refetchAll` runs one more time, and now the user's share balance and the total vault assets have both increased appropriately.
+
+From the user's perspective, this entire flow feels smooth and straightforward. They connect their wallet, type an amount, click approve, confirm in their wallet, click stake, confirm again, and they're done. Behind the scenes, there's a sophisticated dance of contract calls, state updates, and data fetching that makes everything work.
+
+### Keeping Everything in Sync
+
+One challenge in blockchain applications is keeping the displayed data current. After any transaction, the balances could change. That's why I built the `refetchAll` function and connected it to the `useEffect` that watches for `isSuccess`. Whenever any transaction finishes (whether approval, deposit, or withdraw), I refresh all the data from the blockchain.
+
+I also rely on `wagmi`'s built-in automatic refetching. The library periodically re-runs read queries to keep data fresh, and it automatically invalidates relevant queries after write transactions. So even if the user sits on the page without doing anything, their balances will update in the background.
+
+This creates a responsive experience where numbers change in real-time as transactions happen on the network. There's no need for manual refresh buttons or confusing "loading" states that never clear.
+
+### Error Handling and User Feedback
+
+I wanted the interface to be helpful when things go wrong. Any error from a contract call gets captured by `wagmi` and exposed as `writeError`. I could display this to users, but for this MVP I kept it simple and just disabled the button while transactions are pending.
+
+The button text changes provide clear feedback about what will happen next. If it says "Approve DEMO", the user knows they need to do that first. Once it says "Stake DEMO", they know approval is complete. The loading spinner during transactions prevents double-submits, and the status text below tells them whether they need to check their wallet.
+
+This design philosophy extends throughout: users should never be confused about what the interface is doing or what they need to do next.
+
+### What Makes This Integration Work
+
+Reflecting on the architecture, I'm pleased with how cleanly the concerns are separated:
+
+- The smart contract handles all the financial logic and security. It's simple, auditable, and follows standards.
+- The `useStaking` hook is the sole point of contact between my UI and the blockchain. It knows about contracts, ABIs, and wagmi, but the UI components don't.
+- The `StakingCard` component is purely presentational. It receives data and functions as props and renders them appropriately. It doesn't know where the data comes from or how transactions are sent.
+- The main page arranges components and provides layout and navigation.
+
+This separation makes the code maintainable and testable. If I wanted to change the staking logic, I'd only modify the hook. If I wanted to redesign the card, I'd only touch that component. And if I wanted to support multiple vaults or add more features, the architecture scales nicely.
+
+### The Role of TypeScript
+
+I chose TypeScript for this project because it catches mistakes early and makes the code self-documenting. Notice how the `useStaking` hook returns specific types: `assetBalance` is a string (formatted for display), `deposit` is a function that takes a string, etc. TypeScript ensures that I use these values correctly throughout the app.
+
+For example, when I call `parseUnits(amount, aDec)` in the deposit function, TypeScript knows that `parseUnits` expects a string and a number, and it returns a big number object. Without TypeScript, I might accidentally pass a number where a string was expected, or forget to handle the conversion, and the bug would only appear at runtime.
+
+In a blockchain application, type safety is especially valuable because on-chain transactions are irreversible and cost real money. I want to be absolutely certain that the values I'm sending to contracts are correctly formatted.
+
+### Deploying and Testing the Full Stack
+
+Once I had both the contract and the frontend working locally, I needed to deploy them. The contract lives permanently on the Sepolia testnet at the address `0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458`. The mock token is at `0x22c26E2278Fb64bF367dE2121762e174ce02c4ED`.
+
+These addresses are hardcoded in `contracts.ts` so the frontend knows where to find the contracts. As long as these contracts stay deployed, anyone can interact with them through my web interface.
+
+For the frontend itself, I could host it on any static hosting service—Vercel, Netlify, or even GitHub Pages. Next.js builds the application into static files that run entirely in the browser, with no server-side logic required (except for the initial page load).
+
+What makes this combination powerful is that users don't need to install any special software. They just need a web browser and a wallet extension like MetaMask. They visit the site, connect their wallet, and they can start staking immediately. The contract is trustless and transparent—anyone can verify on Etherscan that it does exactly what I claim.
+
+### Contract Deployment Details
+
+The contracts were successfully deployed to the Sepolia testnet with the following details:
+
+**ERC20 Mock Token (DEMO)**
+The mock ERC20 token contract is deployed at [`0x22c26E2278Fb64bF367dE2121762e174ce02c4ED`](https://sepolia.etherscan.io/address/0x22c26E2278Fb64bF367dE2121762e174ce02c4ED). The deployment transaction can be viewed on Etherscan at https://sepolia.etherscan.io/tx/0xbe3dd6773d7b8b18b553293eaa7f90a72cc129fe3c9919587e3cb1da31f3d2e3. This token serves as the underlying asset for the staking vault, allowing users to practice staking with test tokens that have no real monetary value.
+
+**SimpleStaking Vault**
+The staking vault contract is deployed at [`0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458`](https://sepolia.etherscan.io/address/0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458). Its deployment transaction is available at https://sepolia.etherscan.io/tx/0xb89c9a91d4e4a073205b6da9fdc6e1f12a7103372b590210881e30fca8518aef. This contract implements the ERC-4626 standard and manages the staking operations, including deposits, withdrawals, and share token minting/burning.
+
+### Demo Operations on Sepolia
+
+To demonstrate the staking functionality, several transactions were executed on the Sepolia testnet:
+
+**Token Approval**
+Before staking, users must approve the vault to spend their tokens. The approval transaction can be seen at https://sepolia.etherscan.io/tx/0xcd7587f1fd9674f1d062fc5f6136602aa5ab823a8e4677ca4c855f041ea4e557. This transaction grants the staking vault permission to transfer a specified amount of DEMO tokens from the user's wallet.
+
+**Staking (Deposit)**
+A successful staking operation is documented at https://sepolia.etherscan.io/tx/0x9398016f758ff85ddb7a3ebf7625a0aebaba155f3004a2d817c844796efeb833. In this transaction, DEMO tokens were deposited into the vault and corresponding YIELD share tokens were minted to the depositor's address, representing their ownership stake in the pool.
+
+**Unstaking (Withdraw)**
+The withdrawal operation is showcased at https://sepolia.etherscan.io/tx/0x0906c0677bcba0823306863d5e06829a3e9d0087c80fdb22d75a08054b956d31. This transaction burned the user's share tokens and returned the proportional amount of DEMO tokens (including any accrued rewards) to their wallet, completing the staking cycle.
+
+These live transactions confirm that the staking contract functions correctly according to the ERC-4626 standard, with proper handling of token approvals, share calculations, and asset redemptions.
+
+### Accessibility and User Experience
+
+I designed this interface with several accessibility considerations:
+
+- All text has sufficient contrast against the background
+- Buttons are large enough to tap on mobile devices
+- The interface works with keyboard navigation
+- Numbers are formatted with locale-aware commas for readability
+- Status messages clearly indicate what's happening
+
+But beyond these technicalities, the most important accessibility feature is simplicity. I avoided technical jargon in the UI. Instead of showing raw contract addresses or ABI details, I show friendly labels like "Stake" and "Unstake". Instead of showing wei values (the tiny units of ETH), I show formatted decimal numbers.
+
+My goal was to create an experience that feels like any other financial app—something familiar and approachable. The blockchain complexity should be invisible to the user. They should feel like they're just depositing money into a savings account, because conceptually that's exactly what they're doing.
+
+### Security Considerations in the Frontend
+
+While the smart contract handles the critical security logic, the frontend also has responsibilities:
+
+- I never store private keys or sensitive data. All signing happens in the user's wallet extension.
+- I validate user input before sending transactions (the `isNaN` check in `handleAction`).
+- I use the official wagmi and RainbowKit libraries rather than rolling my own wallet connection code, which prevents common vulnerabilities.
+- I don't trust contract responses blindly—I format them and handle cases where data might be missing.
+
+But the most important security principle is transparency: the contract code is verified and viewable on Etherscan. Users can independently verify that the vault does what it promises before they deposit any funds. My frontend is merely a convenience layer—the truth lives on the blockchain.
+
+## Using the DApp: A Step-by-Step Visual Guide
+
+Now that you understand how the staking contract works, let's walk through the actual user experience. The interface I built makes it easy for anyone to stake and unstake tokens with just a few clicks. Below are screenshots showing each step of the process, from landing on the page to completing a full stake and unstake cycle.
+
+### Step 1: Landing Page
+
+When users first visit the application, they see a clean, professional landing page with a clear value proposition. The interface prominently displays the staking card and includes a wallet connection button in the navigation bar. The design is intuitive and welcoming, even for those new to DeFi.
+
+![Step 1: Landing Page](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_1_connect.png)
+
+### Step 2: Connect Wallet
+
+Before interacting with the staking contract, users must connect their cryptocurrency wallet. Clicking the "Connect Wallet" button (provided by RainbowKit) triggers the wallet extension to open, asking for permission to connect. This establishes a secure connection between the web application and the user's wallet, enabling blockchain transactions.
+
+![Step 2: Connect Wallet](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_2_wallet_popup.png)
+
+### Step 3: Wallet Connected
+
+Once the wallet is connected, the interface updates to show the user's connected address (partially masked for privacy). The staking card now displays the user's current DEMO token balance and YIELD share balance, if any. The user can now proceed with staking operations.
+
+![Step 3: Wallet Connected](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_3_connected.png)
+
+### Step 4: Approving Tokens
+
+Before staking, the user must grant the vault permission to spend their DEMO tokens. This is done by clicking the "Approve DEMO" button. The transaction appears in the wallet for confirmation. This approval is a necessary security step in Ethereum—tokens remain in the user's wallet until they explicitly authorize the vault to access them.
+
+![Step 4: Approving Tokens](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_4_approving_tokens.png)
+
+### Step 5: Depositing Tokens
+
+After approval, the button changes to "Stake DEMO". The user enters the amount they want to stake (or clicks MAX to use their entire balance) and clicks the button. This creates a deposit transaction that transfers the tokens to the vault and mints corresponding share tokens to the user's wallet.
+
+![Step 5: Depositing Tokens](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_5_staking_tokens.png)
+
+### Step 6: Tokens Deposited
+
+Once the deposit transaction is confirmed on the blockchain, the interface updates automatically. The user's staked balance now reflects the newly deposited tokens, and their YIELD share balance increases accordingly. The total vault assets also grow, demonstrating how each deposit strengthens the staking pool.
+
+![Step 6: Tokens Deposited](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_6_tokens_staked.png)
+
+### Step 7: Withdrawing Tokens
+
+When the user wants to unstake, they switch to the "Unstake" tab. They enter the amount they wish to withdraw (or click MAX) and click "Unstake DEMO". This creates a withdrawal transaction that burns their share tokens and returns the proportional amount of DEMO tokens to their wallet.
+
+![Step 7: Withdrawing Tokens](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_7_unstaking_tokens.png)
+
+### Step 8: Tokens Withdrawn
+
+After the withdrawal transaction confirms, the user's staked balance decreases, and their DEMO token balance in their wallet increases by the withdrawn amount (plus any rewards earned while staked). The user has successfully completed a full staking cycle, and can choose to stake again or hold their tokens.
+
+![Step 8: Tokens Withdrawn](D:\DEV\publicacion_staking_linkedin\images_article\screenshot_dapp_8_tokens_unstaked.png)
+
+This visual walkthrough demonstrates how the DApp transforms complex blockchain operations into simple, user-friendly interactions. Each step is accompanied by clear feedback, and the interface remains responsive throughout the entire process.
 
 ## The Bigger Picture: Why This Matters Beyond Code
 
@@ -357,14 +1014,6 @@ The transparency is revolutionary. Every transaction is on the blockchain. Anyon
 
 And the composability means this technology can combine with other DeFi building blocks. Lending protocols can use staked assets as collateral. Yield aggregators can move funds between different staking contracts to optimize returns. The ecosystem grows stronger as each piece becomes interoperable.
 
-## What I Learned Building This
-
-Building this staking contract taught me that elegance in smart contracts comes from leveraging standards rather than custom complexity. The most powerful contracts are often the simplest when they use proven abstractions correctly.
-
-I also learned that security is not an afterthought—it's baked into every design decision. The decimals offset might seem like a minor tweak, but it prevents catastrophic losses. Each security requirement feels like adding another layer of protection that compounds the safety of the entire system.
-
-Most importantly, I discovered that explaining these concepts clearly is as important as building them correctly. When technology remains wrapped in jargon, it excludes people. My goal with this project and this article is to open the door for anyone curious about how decentralized finance works under the hood.
-
 ## Where This is Heading
 
 I’m happy with how this project turned out. It’s not just about the code; it’s about making financial tools that are more accessible and transparent. When you use a smart contract, you don't have to trust a person or a company—you just have to trust the math, which is public for anyone to see.
@@ -373,7 +1022,22 @@ The code for my contract is quite short—only about 37 lines—because I leaned
 
 If you’re interested in how this works, I encourage you to look at the contract address on the Sepolia testnet. You can see the transactions happening in real-time. It’s a great way to start understanding how the future of money is being built, one step at a time. I'm glad to be part of this community and I look forward to seeing how these tools continue to evolve.
 
-## Conclusion and Next Steps
+## Useful Links
+
+### ERC-4626 & OpenZeppelin 
+- [ERC-4626 Official Standard](https://eips.ethereum.org/EIPS/eip-4626) — Canonical EIP defining tokenized vaults.  
+- [OpenZeppelin ERC4626 Docs](https://docs.openzeppelin.com/contracts/5.x/erc4626) — Full documentation including decimals offset and inflation attack defense.  
+- [ERC4626.sol Source Code](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC4626.sol) — Exact contract you inherited.
+
+### Frontend Stack  
+- [wagmi Documentation](https://wagmi.sh/react/getting-started) — React hooks for reading/writing contracts (useReadContract, useWriteContract, etc.).  
+- [RainbowKit Documentation](https://rainbowkit.com/docs) — Wallet connection UI and configuration.
+
+### Sepolia Testnet Faucets (get free test ETH)  
+- [Alchemy Sepolia Faucet](https://www.alchemy.com/faucets/ethereum-sepolia) — 0.1 ETH daily, no authentication required.  
+- [Google Cloud Sepolia Faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia) — Official 0.05 ETH drip.
+
+## Conclusion
 
 Staking contracts represent a fundamental building block of the decentralized future. They demonstrate how code can create trustless, automated financial systems that serve everyone equally. The ERC-4626 standard, with its two-token architecture and precise mathematical guarantees, provides a solid foundation for this new economy.
 
