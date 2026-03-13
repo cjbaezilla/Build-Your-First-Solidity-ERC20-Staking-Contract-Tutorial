@@ -79,6 +79,28 @@ This token is issued to users when they stake their assets. It represents their 
 | **Symbol** | YIELD |
 | **Decimals** | 18 |
 
+## Available Functions (ERC-4626 & ERC-20)
+
+Since `SimpleStaking` inherits from OpenZeppelin's `ERC4626` and `ERC20`, it exposes a powerful set of functions for both users and developers.
+
+### Deposit & Mint
+- **`deposit(assets, receiver)`**: Deposits a specific amount of underlying tokens (DEMO) and mints shares (YIELD) to the receiver.
+- **`mint(shares, receiver)`**: Mints a specific amount of shares (YIELD) by taking the required amount of underlying tokens from the caller.
+
+### Withdraw & Redeem
+- **`withdraw(assets, receiver, owner)`**: Withdraws a specific amount of underlying tokens by burning the equivalent amount of shares.
+- **`redeem(shares, receiver, owner)`**: Burns a specific amount of shares to withdraw the proportional amount of underlying tokens.
+
+### Accounting & Previews
+- **`totalAssets()`**: Returns the total amount of DEMO tokens managed by the vault.
+- **`convertToShares(assets)`**: View function to calculate how many shares an amount of assets is worth.
+- **`convertToAssets(shares)`**: View function to calculate the underlying value of a certain amount of shares.
+- **`previewDeposit` / `previewMint` / `previewWithdraw` / `previewRedeem`**: Simulation functions to estimate the outcome of an operation without executing a transaction.
+
+### Standard ERC-20 Functions
+As the vault itself is a token (YIELD), it includes:
+- `balanceOf(account)`, `transfer(to, amount)`, `approve(spender, amount)`, `allowance(owner, spender)`.
+
 ## Security Analysis & Enhancements
 
 Following the OpenZeppelin ERC-4626 standard guidelines and deeper structural analysis, the `SimpleStaking` contract has been optimized for both security and efficiency:
@@ -107,5 +129,5 @@ Following the OpenZeppelin ERC-4626 standard guidelines and deeper structural an
 - `test/SimpleStaking.test.js`: Comprehensive test suite using Chai and Ethers.js.
 - `hardhat.config.js`: Configuration for compilation and EVM targets.
 
-## 📄 License
+## License
 This project is licensed under the MIT License.

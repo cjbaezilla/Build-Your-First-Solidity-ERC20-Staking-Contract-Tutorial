@@ -2,7 +2,7 @@
 
 A premium, standardized user interface for interacting with the **Simple Staking (ERC-4626)** vault. This application allows users to stake their **DEMO** tokens and earn **YIELD** bearing shares through a seamless, highly-polished web experience.
 
-## ✨ Features
+## Features
 
 -   **Standardized Staking**: Full integration with the ERC-4626 Tokenized Vault Standard.
 -   **Intelligent Logic**: One-click "Stake" button that automatically handles approvals if needed.
@@ -10,7 +10,7 @@ A premium, standardized user interface for interacting with the **Simple Staking
 -   **Premium UI/UX**: Modern dark-mode interface with glassmorphism, radial gradients, and smooth transitions.
 -   **Abstracted Architecture**: Clean separation of concerns using custom hooks and modular components.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 -   **Frontend**: Next.js (Pages Router)
 -   **Web3 Connectivity**: RainbowKit + Wagmi
@@ -18,7 +18,7 @@ A premium, standardized user interface for interacting with the **Simple Staking
 -   **Styling**: Vanilla CSS Modules (Premium aesthetics)
 -   **Language**: TypeScript (Strict typing for ABIs)
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 src/
@@ -37,15 +37,24 @@ src/
     └── globals.css         # Typography & global theme
 ```
 
-## 🏗 Key Implementation Details
+## Key Implementation Details
 
 ### 1. The `useStaking` Hook
+
 Located at `src/hooks/useStaking.ts`, this hook serves as the "brain" of the application. It abstracts:
 -   **Read Operations**: Fetches `balanceOf` (both Asset and Share), `allowance`, and `totalAssets`.
 -   **Calculations**: Uses `convertToAssets` to show the real-time value of the user's stake in the underlying asset.
 -   **Write Operations**: Handles `approve`, `deposit`, and `redeem` transactions with lifecycle management (`isPending`, `isWaitingForTransaction`).
 
-### 2. Smart Contract Integration
+### 2. UX-Driven Design Choices: Deposit vs. Redeem
+
+While the ERC-4626 standard offers multiple ways to entry/exit the vault, this DApp prioritizes **Asset-based Interaction** for a better user experience:
+
+-   **Why `deposit` and `withdraw`?**: Users typically think in terms of the underlying asset (e.g., "I want to stake 100 DEMO" or "I want to get my 100 DEMO back"). `deposit` and `withdraw` use the asset amount as the primary input.
+-   **Why not `redeem`?**: `redeem` requires the user to specify the amount of **shares** (YIELD) to burn. This is often confusing for non-technical users who may not know their exact share balance or its current converted value.
+-   **Simplified Interface**: The UI abstracts the complexity of "shares" by using `convertToAssets` behind the scenes to show users the real-time value of their stake in the token they originally deposited.
+
+### 3. Smart Contract Integration
 Managed in `src/constants/contracts.ts`, providing full TypeScript type-safety for contract interactions.
 -   **ERC20Mock (DEMO)**: `0x22c26E2278Fb64bF367dE2121762e174ce02c4ED`
 -   **SimpleStaking (YIELD)**: `0x637a4de5e0068d1F0dfc91B3C00A1B7c92Ed3458`
@@ -56,7 +65,7 @@ The UI was built with a "Premium-First" approach:
 -   **Glassmorphism**: The `StakingCard` uses a high-blur backdrop filter and subtle border highlights.
 -   **Typography**: Implements **Plus Jakarta Sans** for a modern, high-tech fintech feel.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 -   Node.js & npm
@@ -76,7 +85,7 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the vault.
 
-## 🔐 Security & UX
+## Security & UX
 -   **Protection**: UI interactions respect the contract's `_decimalsOffset` implementation, ensuring precision is handled correctly for the user.
 -   **Status Guidance**: Informative states for "Confirming in Wallet" and "Transaction Pending" ensure users are never left guessing.
 -   **Input Validation**: Max-balance shortcuts and numeric sanitization prevent invalid transaction attempts.
