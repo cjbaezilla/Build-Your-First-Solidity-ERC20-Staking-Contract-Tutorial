@@ -4,7 +4,23 @@
 
 ![Dapp](./images_article/screenshot_dapp_1_connect.png)
 
-Hello. I'm going to walk you through building a basic staking system using ERC20 tokens on Ethereum Sepolia. This tutorial is for absolute beginners. If you've never touched code before, that's fine. I'll explain everything in plain language. We'll have a working staking contract by the end.
+Welcome to a hands-on journey into decentralized finance where I will guide you through building a complete staking application from the ground up. I have designed this tutorial specifically for people who have never written code before, and I mean that sincerely. When I began learning about blockchain technology, I discovered that most tutorials either assumed you were already a software engineer or skipped over the fundamental concepts that matter. That frustration inspired me to create this guide. I will hold your hand through every step, explaining each concept as if we were sitting together at a computer, and by the time we finish you will have deployed a fully functional staking contract on Ethereum's Sepolia testnet along with a beautiful web interface that real users can interact with.
+
+What we are building together is a system that lets people deposit cryptocurrency tokens into a smart contract and earn rewards automatically, without needing a bank or any intermediary. The contract we write will follow the ERC-4626 standard, which is the industry's best practice for these types of vaults. This means your work will be production-quality code that demonstrates how professional developers build secure financial applications. The web interface will be built with Next.js, giving you a modern React application that connects to the blockchain through your wallet.
+
+I want to be completely clear about what this tutorial involves. We will start from zero, with a blank editor screen, and write our smart contract line by line in Solidity. I will explain what each keyword means and why we need it. We will then write tests to verify our contract works correctly, which is what professional developers do before deploying any code. After that, we will configure our deployment to Sepolia testnet, which is a practice version of Ethereum where you can get free test tokens that have no real monetary value. Then we will deploy our contract and interact with it through the web interface I have prepared. Throughout this process I will explain what is happening at each moment, why each step matters, and how the different pieces fit together.
+
+This is not a copy-paste tutorial where you mindlessly run commands. I want you to understand what is happening. When we run a command in the terminal, I will explain what that command does and why we are running it. When we write code, I will explain the purpose of each line. When we deploy to the blockchain, I will walk you through what a transaction actually is and what it means for something to be on-chain. My goal is that when you complete this tutorial, you will understand how staking contracts work at a fundamental level, and you will have the confidence to explore more advanced topics on your own.
+
+The code you will write is intentionally minimal because we are using OpenZeppelin's library of secure, battle-tested smart contract components. This library has been audited by security experts and used in thousands of production contracts. By building on this foundation, you will learn the right way to construct financial smart contracts without introducing vulnerabilities. Our contract itself will be about thirty-seven lines of code, but those thirty-seven lines represent powerful functionality that would have required pages of legal documents and intermediaries in traditional finance.
+
+I have also prepared a complete article in the article.md file that explains the philosophy behind the design, walks through the code in detail, and discusses important security considerations. That article is optional reading as you go through the tutorial, but I encourage you to read it before or after the hands-on work, as it will deepen your understanding of why these systems are built the way they are. The article covers topics like the two-token architecture that enables automatic rewards distribution, why standards like ERC-4626 matter, and what makes this approach secure against common attacks.
+
+This tutorial is safe because we are using testnet. You cannot lose real money. I will show you how to get free test ETH to pay for transaction fees, and the tokens you stake are worthless test tokens. This means you can experiment freely without any financial risk. However, I must emphasize: do not deploy this code to mainnet or use it with real cryptocurrency without extensive security auditing by professionals. The code we write is for educational purposes and has not been through a full security review.
+
+My teaching philosophy is that complex topics become approachable when we break them down into small pieces and explain the purpose behind each piece. I will not use technical jargon without defining it first. If I say something like "transaction" or "smart contract" or "gas," I will immediately explain what that term means in plain language. There are no stupid questions here, and I encourage you to pause the tutorial whenever something is unclear and re-read that section until it makes sense.
+
+So let us begin this adventure together. You do not need any special background other than basic computer literacy and a willingness to learn. I will provide everything else: the code, the explanations, the tools, and the encouragement. By the end, you will have built something real that lives on a global blockchain network, and you will understand how it works from the inside out. That is my promise to you.
 
 ## Social Media & Announcements
 
@@ -16,24 +32,23 @@ Follow along with the project development and announcements:
 
 ## What we're making
 
-Our contract will allow someone to:
-- Lock up their tokens for a set time
-- Earn extra tokens as a reward
-- Get their original tokens back later
+We are building a staking application that lets people earn rewards on their cryptocurrency tokens. Think of it like a digital piggy bank that pays you interest for keeping your coins inside. You put your tokens in, the system works for you, and you can take them out anytime with your earned rewards included.
 
-Think of it like a digital savings account, but on the blockchain.
+Our finished project has two main parts that work together:
 
-### The Smart Contract Layer
+### The blockchain brain (the smart contract)
 
-The [hardhat](hardhat) folder contains all the blockchain code. This is where I wrote the staking contract in Solidity that runs on Ethereum. It handles everything users need to stake tokens, earn rewards, and withdraw their funds. The contract follows the ERC-4626 standard which is the industry's best practice for these types of vaults. You'll also find tests to verify the contract works correctly and configuration files for deployment. Everything in this folder lives on the blockchain.
+Inside the `hardhat` folder is the code that runs on the Ethereum blockchain. This is the rule-keeper that handles all the money stuff. It tracks who deposits tokens, calculates rewards automatically, and sends funds back when people withdraw. We built this using the ERC-4626 standard, which is like an industry rulebook for staking systems. Making our contract follow this standard means it is built the same way professional projects do. You'll also find tests that check everything works right, plus files that prepare the contract for deployment.
 
-### The User Interface
+### The friendly front door (the web interface)
 
-The [nextjs](nextjs) folder is the web application your users will actually see and interact with. I built this with Next.js to create a modern, responsive interface that connects to the blockchain. Users can connect their wallets, see their balances, stake their tokens, and withdraw through this interface. The design uses a premium dark theme with smooth animations to make the experience feel professional and trustworthy. This folder translates complex blockchain operations into simple buttons and displays.
+The `nextjs` folder holds the website that people will actually use. This is the pretty part that shows up in your browser. Users can connect their crypto wallet, see how many tokens they have, press buttons to stake or withdraw, and watch their rewards grow. I designed it with a clean dark theme and smooth animations so it feels professional and trustworthy. This part translates all the complex blockchain actions into simple clicks and clear information.
 
-### Step-by-Step Usage Guide
+### Your complete roadmap
 
-The [article](article.md) will take you into a complete walkthrough of how to use this repository. I wrote it with absolute beginners in mind, taking you through each step from setting up your environment to deploying the contract and using the interface. I explain every command and what it does, so you'll never feel lost. You can follow along at your own pace and refer back to it anytime.
+The `article.md` file is your guide through the entire build. I wrote it for total beginners, walking you through every step from installing software to deploying the contract. Every command gets explained, every concept gets broken down, and you'll never be left wondering what something means. You can go at your own speed and revisit sections anytime.
+
+By the end you will have both a smart contract living on the Ethereum testnet and a beautiful website that real people can use to stake their tokens. The best part is that you will understand exactly how every piece works because I will explain it all in plain language.
 
 ## Why Sepolia testnet
 
@@ -53,19 +68,6 @@ You'll need to install a few things on your computer:
 - Basic comfort with opening a terminal
 
 Don't worry about the technical terms. I'll break each step down.
-
-## How this will go
-
-We'll move through these stages:
-1. Get your environment set up with the right tools
-2. Understand ERC20 tokens in simple terms
-3. Write your first smart contract in Solidity
-4. Run it locally to see it work
-5. Deploy it to Sepolia testnet
-6. Use Metamask to interact with your contract
-7. Go over what each piece does
-
-Each step has clear instructions. You can take your time.
 
 ## DISCLAIMER
 
