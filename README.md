@@ -38,15 +38,15 @@ Our finished project has two main parts that work together:
 
 ### The blockchain brain (the smart contract)
 
-Inside the `hardhat` folder is the code that runs on the Ethereum blockchain. This is the rule-keeper that handles all the money stuff. It tracks who deposits tokens, calculates rewards automatically, and sends funds back when people withdraw. We built this using the ERC-4626 standard, which is like an industry rulebook for staking systems. Making our contract follow this standard means it is built the same way professional projects do. You'll also find tests that check everything works right, plus files that prepare the contract for deployment.
+Inside the [`hardhat`](./hardhat) folder is the code that runs on the Ethereum blockchain. This is the rule-keeper that handles all the money stuff. It tracks who deposits tokens, calculates rewards automatically, and sends funds back when people withdraw. We built this using the ERC-4626 standard, which is like an industry rulebook for staking systems. Making our contract follow this standard means it is built the same way professional projects do. You'll also find tests that check everything works right, plus files that prepare the contract for deployment.
 
 ### The friendly front door (the web interface)
 
-The `nextjs` folder holds the website that people will actually use. This is the pretty part that shows up in your browser. Users can connect their crypto wallet, see how many tokens they have, press buttons to stake or withdraw, and watch their rewards grow. I designed it with a clean dark theme and smooth animations so it feels professional and trustworthy. This part translates all the complex blockchain actions into simple clicks and clear information.
+The [`nextjs`](./nextjs) folder holds the website that people will actually use. This is the pretty part that shows up in your browser. Users can connect their crypto wallet, see how many tokens they have, press buttons to stake or withdraw, and watch their rewards grow. I designed it with a clean dark theme and smooth animations so it feels professional and trustworthy. This part translates all the complex blockchain actions into simple clicks and clear information.
 
 ### Your complete roadmap
 
-The `article.md` file is your guide through the entire build. I wrote it for total beginners, walking you through every step from installing software to deploying the contract. Every command gets explained, every concept gets broken down, and you'll never be left wondering what something means. You can go at your own speed and revisit sections anytime.
+The [`article.md`](./article.md) file is your guide through the entire build. I wrote it for total beginners, walking you through every step from installing software to deploying the contract. Every command gets explained, every concept gets broken down, and you'll never be left wondering what something means. You can go at your own speed and revisit sections anytime.
 
 By the end you will have both a smart contract living on the Ethereum testnet and a beautiful website that real people can use to stake their tokens. The best part is that you will understand exactly how every piece works because I will explain it all in plain language.
 
