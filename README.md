@@ -43,6 +43,18 @@ We'll move through these stages:
 
 Each step has clear instructions. You can take your time.
 
+## DISCLAIMER
+
+**THIS CODE IS FOR TESTING AND EDUCATIONAL PURPOSES ONLY.**
+
+This implementation has **NOT** been audited for production use. Do **NOT** deploy this code to mainnet or use it with real funds without a comprehensive security audit by qualified professionals. The code is provided as-is with no warranties. Use at your own risk.
+
+**Key Points:**
+- For learning and testing only
+- No security guarantees
+- Requires professional audit before production
+- Never use with real cryptocurrency
+
 ## Important safety reminder
 
 This is purely educational. The tokens you'll use are test tokens with no value. I cannot stress enough: do not try this with real cryptocurrency until you truly understand what you're doing. The code we write here is for learning, not production use. It lacks the security checks that real contracts need.

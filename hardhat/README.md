@@ -101,6 +101,19 @@ Since `SimpleStaking` inherits from OpenZeppelin's `ERC4626` and `ERC20`, it exp
 As the vault itself is a token (YIELD), it includes:
 - `balanceOf(account)`, `transfer(to, amount)`, `approve(spender, amount)`, `allowance(owner, spender)`.
 
+## DISCLAIMER
+
+**THIS CODE IS FOR TESTING AND EDUCATIONAL PURPOSES ONLY.**
+
+This implementation has **NOT** been audited for production use. Do **NOT** deploy this code to mainnet or use it with real funds without a comprehensive security audit by qualified professionals. The code is provided as-is with no warranties. Use at your own risk.
+
+**Key Points:**
+- For learning and testing only
+- No security guarantees
+- Requires professional audit before production
+- Never use with real cryptocurrency
+- `.env` files are used for educational purposes and are NOT recommended for production environments
+
 ## Security Analysis & Enhancements
 
 Following the OpenZeppelin ERC-4626 standard guidelines and deeper structural analysis, the `SimpleStaking` contract has been optimized for both security and efficiency:
