@@ -103,3 +103,10 @@ This implementation has **NOT** been audited for production use. Do **NOT** depl
 -   **Status Guidance**: Informative states for "Confirming in Wallet" and "Transaction Pending" ensure users are never left guessing.
 -   **Input Validation**: Max-balance shortcuts and numeric sanitization prevent invalid transaction attempts.
 
+## Social Media & Announcements
+
+Follow along with the project development and announcements:
+
+- [LinkedIn Announcement](https://www.linkedin.com/posts/carlos-baeza-negroni_staking-erc4626-erc20-activity-7438194156272959488-LK9B)
+- [LinkedIn Article](https://www.linkedin.com/pulse/build-your-first-defi-staking-dapp-ethereum-hands-on-baeza-negroni-46wyf)
+- [X/Twitter Thread](https://x.com/cjbaezilla/status/2032432576363712548)
